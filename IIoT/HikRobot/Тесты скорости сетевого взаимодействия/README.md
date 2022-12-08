@@ -13,12 +13,14 @@
 
 <details>
  <summary>Скриншоты настроек IDVMS</summary>
+
 ![1](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-44-18.png)
 ![2](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-44-50.png)
 ![3](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-06.png)
 ![4](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-27.png)
 ![5](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-35.png)
 ![6](Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-51.png)
+
 </details>
 
 
@@ -29,6 +31,7 @@
 ## MV-ID2004M-06S-WBN
 
 Пинг до камеры
+
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ ping 192.168.217.40
 PING 192.168.217.40 (192.168.217.40) 56(84) bytes of data.
@@ -55,6 +58,7 @@ rtt min/avg/max/mdev = 0.420/0.765/1.022/0.176 ms
 
 <details>
  <summary>Лог</summary>
+
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.112636 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2904|51|3.4|F\n' ||
@@ -115,6 +119,7 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 
 <details>
  <summary>Лог</summary>
+
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.128190 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2955|53|3.4|F\n' ||
@@ -162,6 +167,7 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 
 <details>
  <summary>Лог</summary>
+
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.111090 | (b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|3007|47|3.4|F\n', ('192.168.217.40', 2020)) ||
@@ -188,6 +194,7 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 
 <details>
  <summary>Лог</summary>
+
 ```
 || 0:00:00.080907 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|4|19|4.1|F\n' ||
 || 0:00:00.066389 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|5|24|4.1|F\n' ||
