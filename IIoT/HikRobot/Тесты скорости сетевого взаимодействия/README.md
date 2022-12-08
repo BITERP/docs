@@ -8,94 +8,19 @@
 
 Опрост камер осуществлялся скриптом запускаемым на промышленном компьютере подключенным в тот же коммутатор. В результаты чтения камер добавлен вывод времени, затраченного на распознавание кода.
 
-<{Код скрипта
-```python
-from datetime import datetime
-import socket
-#from PIL import Image
-from time import sleep
-
-
-camera_ip = '192.168.217.42'
-tcp_send_port = 2001
-tcp_receive_port = 2002
-udp_listen_port = 6000
-
-tcp_connection_1=socket.socket(
-    family=socket.AF_INET,
-    type=socket.SOCK_STREAM
-)
-tcp_connection_1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)  
-
-tcp_connection_2=socket.socket(
-    family=socket.AF_INET,
-    type=socket.SOCK_STREAM
-)
-tcp_connection_2.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1) 
-
-udp_socket = socket.socket(
-    family=socket.AF_INET,
-    type=socket.SOCK_DGRAM
-)
-udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1) 
- 
-def read_until(connection,waiting_bytes):
-    waiting_len = len(waiting_bytes)
-    recieve_len = waiting_len
-    rcv_bytes = b''
-    while True:
-        rcv_bytes = rcv_bytes+connection.recv(recieve_len)
-        recieve_len = 1
-        if rcv_bytes[-waiting_len:] == waiting_bytes:
-            return rcv_bytes
-
-def test_send_receive(send_connection, recieve_connection):
-    while True:
-        start_readig = datetime.now()
-        send_connection.sendall(b'TON')
-        read_result = read_until(recieve_connection,b'\x0A')
-        result_received = datetime.now()
-        print(f"|| {result_received-start_readig} | {read_result} ||")
-
-def same_connection():
-    tcp_connection_1.connect((camera_ip,2001))
-    test_send_receive(tcp_connection_1,tcp_connection_1)
-
-
-def different_connection():
-    tcp_connection_1.connect((camera_ip,2001))
-    tcp_connection_2.connect((camera_ip,2002))
-    test_send_receive(tcp_connection_1,tcp_connection_2)
-  
-def udp_receive():
-    tcp_connection_1.connect((camera_ip,2001))
-    udp_socket.bind(('0.0.0.0',6000))
-    while True:
-        start_readig = datetime.now()
-        tcp_connection_1.sendall(b'TON')
-        rcv_bytes = b''
-        rcv_bytes = udp_socket.recvfrom(1024)
-        result_received = datetime.now()
-        print(f"|| {result_received-start_readig} | {rcv_bytes} ||")
-        
-if __name__ == "__main__":
-    same_connection()
-    #different_connection()
-    #udp_receive()
-```
-}>
-
 Под камеры помещен один датаматрикс код и настроен фокус. После тестов определялась задержка по формуле
 `(время_получения_ответа - время_отправки_ответа) - время_работы_алгоритма`
 
-<{Скриншоты настроек камер
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-45-51.png
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-45-35.png
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-45-27.png
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-45-06.png
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-44-50.png
-file:/iiot/bit.iiotpromyshl/kameryhikrobot/testyskorostisetevogovzaimodejjstvija/snimokjekranaot2022-12-0810-44-18.png
-}>
+<details>
+ <summary>Скриншоты настроек IDVMS</summary>
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-44-18.png
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-44-50.png
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-06.png
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-27.png
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-35.png
+/Скриншоты настроек IDVMS/Снимок экрана от 2022-12-08 10-45-51.png
+<details>
+
 
 При проведении теста выключались все протоколы камер, кроме тестируемых. IDVMS отключалась от камеры.
 
@@ -128,7 +53,8 @@ rtt min/avg/max/mdev = 0.420/0.765/1.022/0.176 ms
 * Минимальная 44 мс
 * Максимальная 63 мс
 
-<{Лог
+<details>
+ <summary>Лог</summary>
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.112636 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2904|51|3.4|F\n' ||
@@ -179,14 +105,16 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 || 0:00:00.099818 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2949|46|3.4|F\n' ||
 || 0:00:00.099837 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2950|53|3.3|F\n' ||
 ```
-}>
+<details>
 
 ### Отправка триггера и получение результата по разным TCP соединениям.
 
 * Средняя задержка 55 мс
 * Минимальная 33 мс
 * Максимальная 94 мс
-<{Лог
+
+<details>
+ <summary>Лог</summary>
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.128190 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2955|53|3.4|F\n' ||
@@ -224,7 +152,7 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 || 0:00:00.099819 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2987|47|3.3|F\n' ||
 || 0:00:00.121940 | b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|2988|68|3.4|F\n' ||
 ```
-}>
+<details>
 
 ### Отправка триггера по TCP, результат по UDP.
 
@@ -232,7 +160,8 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 * Минимальная 55 мс
 * Максимальная 86 мс
 
-<{Лог
+<details>
+ <summary>Лог</summary>
 ```
 sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py 
 || 0:00:00.111090 | (b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|3007|47|3.4|F\n', ('192.168.217.40', 2020)) ||
@@ -248,7 +177,7 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 || 0:00:00.132831 | (b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|3017|75|3.4|F\n', ('192.168.217.40', 2020)) ||
 || 0:00:00.131885 | (b'hik~0104810419005987215Pd7p8rMO%PGh\x1d93Wuh4|DataMatrix|0|3018|50|3.4|F\n', ('192.168.217.40', 2020)) ||
 ```
-}>
+<details>
 
 ## MV-ID3016PM-06M-WBN
 ### Отправка триггера и получение результата по одному и тому же TCP соединению.
@@ -257,7 +186,8 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 * Минимальная 36 мс
 * Максимальная 62 мс
 
-<{Лог
+<details>
+ <summary>Лог</summary>
 ```
 || 0:00:00.080907 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|4|19|4.1|F\n' ||
 || 0:00:00.066389 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|5|24|4.1|F\n' ||
@@ -328,5 +258,5 @@ sa@show-room-scada:~/BITERP/IIoT/SCADA$ python3 ./camera_read_request.py
 || 0:00:00.065976 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|70|19|4.1|F\n' ||
 || 0:00:00.065855 | b'hik~0104810419005987215PJ-IA9B!dIHt\x1d93u87q|DataMatrix|0|71|19|4.1|F\n' ||
 ```
-}>
+<details>
 
